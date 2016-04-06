@@ -16,12 +16,18 @@ class Cookpad(CrawlSpider):
 
 
     def __init__(self, category=None, *args, **kwargs):
+        # カテゴリオプション
         self.category = unicode(category, "utf-8")
+        """
+        http://cookpad.com/search/パスタ 時短?purpose=時短
+        のようなURLからクローリングを開始 
+        """
         self.start_urls = [
             'http://cookpad.com/search/{0}%E3%80%80%E6%99%82%E7%9F%AD?purpose=%E6%99%82%E7%9F%AD'
                 .format(requests.utils.quote(self.category.encode("utf-8")))
         ]
         self.rules = [
+            #正規表現にマッチするリンクをparse_recipeメソッドでスクレイピング
             Rule(SgmlLinkExtractor(allow=(r'/recipe/[\d]+$')), callback='parse_recipe')
         ]
         super(Cookpad, self).__init__(*args, **kwargs)
@@ -48,7 +54,7 @@ class Cookpad(CrawlSpider):
             imgsrc = "data:image/unknown;base64,"
         return imgsrc + base64.b64encode(bytes)
 
-
+    
     def parse_recipe(self, response):
         item = RecipeCollectorItem()
         sel = Selector(response)

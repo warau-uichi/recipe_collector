@@ -7,7 +7,7 @@
 
 import scrapy
 
-
+# データ出力するフィールドを定義
 class RecipeCollectorItem(scrapy.Item):
     hashed_url = scrapy.Field()
     url = scrapy.Field()
